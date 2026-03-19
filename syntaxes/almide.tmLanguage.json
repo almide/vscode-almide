@@ -139,7 +139,7 @@
             "patterns": [
                 {
                     "name": "keyword.control.almide",
-                    "match": "\\b(if|then|else|match|for|in|while|do|guard)\\b"
+                    "match": "\\b(if|then|else|match|for|in|while|do|guard|fan)\\b"
                 },
                 {
                     "name": "keyword.control.flow.almide",
