@@ -143,7 +143,7 @@
                 },
                 {
                     "name": "keyword.control.flow.almide",
-                    "match": "\\b(try|await|break|continue)\\b"
+                    "match": "\\b(break|continue)\\b"
                 },
                 {
                     "name": "keyword.declaration.almide",
@@ -151,11 +151,7 @@
                 },
                 {
                     "name": "storage.modifier.almide",
-                    "match": "\\b(pub|local|mod|effect|async|strict|deriving)\\b"
-                },
-                {
-                    "name": "keyword.other.almide",
-                    "match": "\\b(unsafe)\\b"
+                    "match": "\\b(pub|local|mod|effect|strict)\\b"
                 }
             ]
         },
