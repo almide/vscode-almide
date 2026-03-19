@@ -98,6 +98,12 @@
                             "include": "#string-escape"
                         }
                     ]
+                },
+                {
+                    "name": "string.quoted.single.almide",
+                    "begin": "'",
+                    "end": "'",
+                    "patterns": []
                 }
             ]
         },
@@ -133,43 +139,35 @@
             "patterns": [
                 {
                     "name": "keyword.control.almide",
-                    "match": "\\b(if|then|else|match|for|in|do|guard|try|await|return)\\b"
+                    "match": "\\b(if|then|else|match|for|in|while|do|guard)\\b"
+                },
+                {
+                    "name": "keyword.control.flow.almide",
+                    "match": "\\b(try|await|break|continue)\\b"
                 },
                 {
                     "name": "keyword.declaration.almide",
-                    "match": "\\b(fn|let|var|type|trait|impl|module|import|test|deriving|newtype|effect|async|extern)\\b"
+                    "match": "\\b(fn|type|trait|impl|let|var|test|import|module|newtype)\\b"
                 },
                 {
-                    "name": "keyword.modifier.almide",
-                    "match": "\\b(pub|local|mod|strict)\\b"
+                    "name": "storage.modifier.almide",
+                    "match": "\\b(pub|local|mod|effect|async|strict|deriving)\\b"
                 },
                 {
-                    "name": "keyword.operator.logical.almide",
-                    "match": "\\b(and|or|not)\\b"
-                },
-                {
-                    "name": "keyword.other.annotation.almide",
-                    "match": "@extern"
+                    "name": "keyword.other.almide",
+                    "match": "\\b(unsafe)\\b"
                 }
             ]
         },
         "constant": {
             "patterns": [
                 {
-                    "name": "constant.language.boolean.almide",
-                    "match": "\\b(true|false)\\b"
+                    "name": "constant.language.almide",
+                    "match": "\\b(true|false|none|some|ok|err|todo|not|and|or)\\b"
                 },
                 {
-                    "name": "constant.language.option.almide",
-                    "match": "\\b(some|none|Some|None)\\b"
-                },
-                {
-                    "name": "constant.language.result.almide",
-                    "match": "\\b(ok|err|Ok|Err)\\b"
-                },
-                {
-                    "name": "keyword.other.todo.almide",
-                    "match": "\\b(todo)\\b"
+                    "name": "constant.language.almide",
+                    "match": "\\b(Ok|Err|Some|None)\\b"
                 }
             ]
         },
@@ -194,10 +192,6 @@
                 {
                     "name": "keyword.operator.pipe.almide",
                     "match": "\\|>"
-                },
-                {
-                    "name": "keyword.operator.concat.almide",
-                    "match": "\\+\\+"
                 },
                 {
                     "name": "keyword.operator.range.almide",
@@ -225,7 +219,7 @@
                 },
                 {
                     "name": "support.module.almide",
-                    "match": "\\b(string|list|map|int|float|fs|env|process|io|json|math|random|regex|time|path|encoding|args|hash|term|http)\\b(?=\\.)"
+                    "match": "\\b(string|list|map|set|int|float|option|result|fs|env|process|io|json|math|random|regex|datetime|log|testing|error|http|value|crypto|uuid)\\b(?=\\.)"
                 },
                 {
                     "name": "variable.language.almide",
