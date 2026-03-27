@@ -139,7 +139,7 @@
             "patterns": [
                 {
                     "name": "keyword.control.almide",
-                    "match": "\\b(if|then|else|match|for|in|while|do|guard|fan)\\b"
+                    "match": "\\b(if|then|else|match|for|in|while|guard|fan)\\b"
                 },
                 {
                     "name": "keyword.control.flow.almide",
@@ -147,7 +147,7 @@
                 },
                 {
                     "name": "keyword.declaration.almide",
-                    "match": "\\b(fn|type|trait|impl|let|var|test|import|module|newtype)\\b"
+                    "match": "\\b(fn|type|protocol|impl|let|var|test|import|module)\\b"
                 },
                 {
                     "name": "storage.modifier.almide",
@@ -187,7 +187,15 @@
                 },
                 {
                     "name": "keyword.operator.pipe.almide",
-                    "match": "\\|>"
+                    "match": "\\|>|>>"
+                },
+                {
+                    "name": "keyword.operator.unwrap.almide",
+                    "match": "\\?\\?|\\?\\.|!"
+                },
+                {
+                    "name": "keyword.operator.concat.almide",
+                    "match": "\\+\\+"
                 },
                 {
                     "name": "keyword.operator.range.almide",
@@ -215,7 +223,7 @@
                 },
                 {
                     "name": "support.module.almide",
-                    "match": "\\b(string|list|map|set|int|float|option|result|fs|env|process|io|json|math|random|regex|datetime|log|testing|error|http|value|crypto|uuid)\\b(?=\\.)"
+                    "match": "\\b(string|list|map|set|int|float|option|result|fs|env|process|io|json|math|random|regex|datetime|log|testing|error|http|value|bytes|matrix)\\b(?=\\.)"
                 },
                 {
                     "name": "variable.language.almide",
