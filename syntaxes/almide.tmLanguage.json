@@ -147,7 +147,7 @@
                 },
                 {
                     "name": "keyword.declaration.almide",
-                    "match": "\\b(fn|type|protocol|impl|let|var|test|import|module)\\b"
+                    "match": "\\b(fn|type|protocol|let|var|test|import|module)\\b"
                 },
                 {
                     "name": "storage.modifier.almide",
