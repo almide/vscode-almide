@@ -151,7 +151,7 @@
                 },
                 {
                     "name": "storage.modifier.almide",
-                    "match": "\\b(pub|local|mod|effect|strict)\\b"
+                    "match": "\\b(pub|local|mod|effect|strict|mut)\\b"
                 }
             ]
         },
