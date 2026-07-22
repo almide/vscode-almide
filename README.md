@@ -1,66 +1,60 @@
 # almide-editors
 
-Editor support for the [Almide](https://github.com/almide/almide) programming language.
+Editor integrations for the [Almide](https://github.com/almide/almide) programming language.
+
+## VS Code Extension
+
+Syntax highlighting, bracket matching, comment toggling, code folding for `.almd` files.
+
+```bash
+cd vscode
+npx vsce package
+code --install-extension almide-lang-*.vsix
+```
+
+Or download the latest `.vsix` from [Releases](https://github.com/almide/vscode-almide/releases).
+
+## Grammar
+
+The TextMate grammar (`syntaxes/almide.tmLanguage.json`) is generated from Almide source code:
+
+```bash
+almide run generator/main.almd
+```
+
+Keywords and scopes come from [almide-grammar](https://github.com/almide/almide-grammar) — the single source of truth for Almide syntax. When keywords change in `almide-grammar`, regenerating the TextMate grammar picks them up automatically.
 
 ## Structure
 
 ```
-grammar/        TextMate grammar (shared by all editors)
-vscode/         VS Code extension
-chrome/         Chrome extension for syntax highlighting
+almide-editors/
+  almide.toml                   declares almide-grammar dependency
+  syntaxes/
+    almide.tmLanguage.json      generated TextMate grammar (shared by both extensions)
+  generator/
+    main.almd                   TextMate grammar generator (Almide)
+    almide_textmate.almd        pattern definitions — imports almide_grammar
+    tmrule.almd                 TextMate rule types
+  vscode/                       VS Code extension packaging
+  language-configuration.json   bracket/comment config
 ```
 
-## VS Code Extension — "Almide"
+## Dependencies
 
-Syntax highlighting for `.almd` files in VS Code.
-
-### Install
-
-Download the latest `.vsix` from [Releases](https://github.com/almide/almide-editors/releases), then:
-
-```bash
-code --install-extension almide-lang-0.1.0.vsix
+```toml
+# almide.toml
+[dependencies]
+almide-grammar = { git = "https://github.com/almide/almide-grammar" }
 ```
 
-### Build from source
+The generator imports `almide_grammar` to get keyword groups, aliases, and scopes — no hardcoded keyword lists in the grammar definition.
 
-```bash
-cd vscode
-npm install -g @vscode/vsce
-vsce package
-code --install-extension almide-lang-0.1.0.vsix
-```
+## CI / Release
 
-### Features
+GitHub Actions (`.github/workflows/release.yml`) runs on push to main:
 
-- Syntax highlighting for `.almd` files
-- Bracket matching and auto-closing
-- Comment toggling (`//` and `(* *)`)
-- Code folding
-
-## Chrome Extension — "Almide Highlight"
-
-Syntax highlighting for Almide on the web.
-
-- `.almd` files on GitHub (blob view)
-- `` ```almide `` / `` ```almd `` fenced code blocks on any website
-- Light / dark theme support (based on system preference or GitHub setting)
-
-### Install
-
-1. Clone this repo
-2. Build the extension:
-   ```bash
-   cd chrome
-   npm install
-   node build.mjs
-   ```
-3. Open `chrome://extensions` → Enable "Developer mode"
-4. Click "Load unpacked" → Select the `chrome/dist/` directory
-
-## TextMate Grammar
-
-The grammar at `grammar/almide.tmLanguage.json` can be used by any editor that supports TextMate grammars (VS Code, Sublime Text, etc.).
+1. Builds `.vsix` (VS Code extension)
+2. Creates GitHub Release with version from `vscode/package.json`
 
 ## License
 
