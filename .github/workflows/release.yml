@@ -16,28 +16,18 @@ jobs:
         with:
           node-version: 20
 
-      # Build VS Code extension
-      - name: Copy grammar to vscode/syntaxes
-        run: cp grammar/almide.tmLanguage.json vscode/syntaxes/almide.tmLanguage.json
-
+      # Package VS Code extension (repo root IS the extension — no more
+      # separate grammar/vscode/chrome subdirectories; chrome moved to
+      # almide-chrome-extension)
       - name: Package vsix
         run: |
           npm install -g @vscode/vsce
-          cd vscode
           vsce package
-
-      # Build Chrome extension
-      - name: Build Chrome extension
-        run: |
-          cd chrome
-          npm ci
-          node build.mjs
-          cd dist && zip -r ../../chrome-extension.zip . && cd ..
 
       # Get version from package.json
       - name: Get version
         id: version
-        run: echo "version=$(node -p "require('./vscode/package.json').version")" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
       # Create or update release
       - name: Release
@@ -46,6 +36,5 @@ jobs:
           tag_name: v${{ steps.version.outputs.version }}
           name: v${{ steps.version.outputs.version }}
           files: |
-            vscode/*.vsix
-            chrome-extension.zip
+            *.vsix
           make_latest: true
