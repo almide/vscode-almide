@@ -32,9 +32,9 @@ almide-editors/
   syntaxes/
     almide.tmLanguage.json      generated TextMate grammar (shared by both extensions)
   generator/
-    main.almd                   TextMate grammar generator (Almide, single file;
-                                imports almide_grammar — see almide/almide#844
-                                for why it is not split into modules)
+    main.almd                   TextMate grammar generator (Almide)
+    almide_textmate.almd        pattern definitions — imports almide_grammar
+    tmrule.almd                 TextMate rule types
   vscode/                       VS Code extension packaging
   language-configuration.json   bracket/comment config
 ```

@@ -1,0 +1,177 @@
+// TextMate grammar rules for Almide
+// All patterns defined as data — emitted to JSON by main.almd
+// Keywords sourced from almide-grammar (single source of truth)
+
+import tmrule
+import almide_grammar
+
+// --- Top-level includes ---
+
+pub fn top_patterns() -> List[Pat] = [
+  Include("#comment"),
+  Include("#string"),
+  Include("#number"),
+  Include("#keyword"),
+  Include("#type"),
+  Include("#function-def"),
+  Include("#constant"),
+  Include("#operator"),
+  Include("#identifier")
+]
+
+// --- Repository entries ---
+
+fn comment() -> RepoEntry = {
+  name: "comment",
+  patterns: [
+    Match { scope: "comment.line.double-slash.almide", regex: "//.*$" },
+    BeginEnd { scope: "comment.block.almide", begin: "/\\*", end: "\\*/", patterns: [] }
+  ]
+}
+
+fn string_interpolation() -> SingleEntry = {
+  name: "string-interpolation",
+  pat: BeginEndCap {
+    scope: "meta.interpolation.almide",
+    begin: "\\$\\{", end: "\\}",
+    begin_cap: "punctuation.section.interpolation.begin.almide",
+    end_cap: "punctuation.section.interpolation.end.almide",
+    content_name: "source.almide.embedded",
+    patterns: [Include("source.almide")]
+  }
+}
+
+fn string_escape() -> SingleEntry = {
+  name: "string-escape",
+  pat: Match {
+    scope: "constant.character.escape.almide",
+    regex: "\\\\[ntr0\\\\\"$]|\\\\u\\{[0-9a-fA-F]+\\}"
+  }
+}
+
+fn string_patterns() -> RepoEntry = {
+  let interp = [Include("#string-interpolation"), Include("#string-escape")]
+  {
+    name: "string",
+    patterns: [
+      BeginEnd { scope: "string.quoted.triple.almide", begin: "r\"\"\"", end: "\"\"\"", patterns: [] },
+      BeginEnd { scope: "string.quoted.triple.almide", begin: "\"\"\"", end: "\"\"\"", patterns: interp },
+      BeginEnd { scope: "string.quoted.double.raw.almide", begin: "r\"", end: "\"", patterns: [] },
+      BeginEnd { scope: "string.quoted.single.almide", begin: "'", end: "'", patterns: [Include("#string-escape")] },
+      BeginEndCap {
+        scope: "string.quoted.double.almide",
+        begin: "\"", end: "\"",
+        begin_cap: "punctuation.definition.string.begin.almide",
+        end_cap: "punctuation.definition.string.end.almide",
+        content_name: "",
+        patterns: interp
+      }
+    ]
+  }
+}
+
+fn number() -> RepoEntry = {
+  name: "number",
+  patterns: [
+    Match { scope: "constant.numeric.hex.almide", regex: "\\b0[xX][0-9a-fA-F_]+\\b" },
+    Match { scope: "constant.numeric.float.almide", regex: "\\b[0-9][0-9_]*\\.[0-9][0-9_]*([eE][+-]?[0-9_]+)?\\b" },
+    Match { scope: "constant.numeric.scientific.almide", regex: "\\b[0-9][0-9_]*[eE][+-]?[0-9_]+\\b" },
+    Match { scope: "constant.numeric.integer.almide", regex: "\\b[0-9][0-9_]*\\b" }
+  ]
+}
+
+fn keyword() -> RepoEntry = {
+  // Keywords from almide-grammar (single source of truth)
+  var patterns: List[Pat] = []
+  for group in almide_grammar.keyword_groups() {
+    let regex = "\\b(" + string.join(group.words, "|") + ")\\b"
+    patterns = patterns + [Match { scope: group.scope, regex: regex }]
+  }
+  // Annotation (not in almide-grammar — editor-specific)
+  patterns = patterns + [Match { scope: "keyword.other.annotation.almide", regex: "@[a-z_][a-zA-Z0-9_]*" }]
+  { name: "keyword", patterns: patterns }
+}
+
+fn constant() -> RepoEntry = {
+  // Aliases (Ok, Err, Some, None) from almide-grammar
+  let alias_names = list.map(almide_grammar.keyword_aliases(), (p) => p.0)
+  let alias_regex = "\\b(" + string.join(alias_names, "|") + ")\\b"
+  {
+    name: "constant",
+    patterns: [
+      Match { scope: "constant.language.boolean.almide", regex: "\\b(true|false)\\b" },
+      Match { scope: "constant.language.option.almide", regex: "\\b(some|none)\\b" },
+      Match { scope: "constant.language.result.almide", regex: "\\b(ok|err)\\b" },
+      Match { scope: "constant.language.almide", regex: alias_regex },
+      Match { scope: "keyword.other.todo.almide", regex: "\\b(todo)\\b" }
+    ]
+  }
+}
+
+fn type_patterns() -> RepoEntry = {
+  name: "type",
+  patterns: [
+    Match { scope: "support.type.builtin.almide",
+      regex: "\\b(Int|Float|String|Bool|Unit|Path|List|Map|Set|Option|Result|Bytes|Matrix|Json|IoError)\\b" },
+    Match { scope: "entity.name.type.almide",
+      regex: "\\b[A-Z][a-zA-Z0-9_]*\\b" }
+  ]
+}
+
+fn function_def() -> SingleEntry = {
+  name: "function-def",
+  pat: MatchCap {
+    scope: "meta.function.almide",
+    regex: "\\b(fn)\\s+([a-z_][a-zA-Z0-9_]*\\??)",
+    captures: [("1", "keyword.declaration.almide"), ("2", "entity.name.function.almide")]
+  }
+}
+
+fn operator() -> RepoEntry = {
+  name: "operator",
+  patterns: [
+    Match { scope: "keyword.operator.arrow.almide", regex: "->|=>" },
+    Match { scope: "keyword.operator.pipe.almide", regex: "\\|>" },
+    Match { scope: "keyword.operator.compose.almide", regex: ">>" },
+    Match { scope: "keyword.operator.unwrap.almide", regex: "\\?\\?|\\?\\.|!|\\?" },
+    Match { scope: "keyword.operator.range.almide", regex: "\\.\\.=|\\.\\.\\.|\\.\\."},
+    Match { scope: "keyword.operator.comparison.almide", regex: "==|!=|<=|>=|<|>" },
+    Match { scope: "keyword.operator.assignment.almide", regex: "=" },
+    Match { scope: "keyword.operator.arithmetic.almide", regex: "\\*\\*|[+\\-*/%^]" }
+  ]
+}
+
+fn identifier() -> RepoEntry = {
+  name: "identifier",
+  patterns: [
+    Match { scope: "support.function.builtin.almide",
+      regex: "\\b(println|eprintln|assert_eq|assert_ne|assert|unwrap_or)\\b" },
+    Match { scope: "support.module.almide",
+      regex: "\\b(string|list|map|set|int|float|math|datetime|error|value|bytes|matrix|option|result|prim|fs|env|process|io|json|random|regex|testing|log|path|args|http|net|zlib|base64|hex|html|mem)\\b(?=\\.)" },
+    Match { scope: "variable.language.almide",
+      regex: "\\b(self|_)\\b" },
+    Match { scope: "entity.name.function.predicate.almide",
+      regex: "\\b[a-z_][a-zA-Z0-9_]*\\?" },
+    Match { scope: "variable.other.almide",
+      regex: "\\b[a-z_][a-zA-Z0-9_]*\\b" }
+  ]
+}
+
+// Collect all entries
+
+pub fn repo_entries() -> List[RepoEntry] = [
+  comment(),
+  string_patterns(),
+  number(),
+  keyword(),
+  constant(),
+  type_patterns(),
+  operator(),
+  identifier()
+]
+
+pub fn single_entries() -> List[SingleEntry] = [
+  string_interpolation(),
+  string_escape(),
+  function_def()
+]
