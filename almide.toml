@@ -1,6 +1,6 @@
 [package]
-name = "almide-editors"
+name = "almide_editors"
 version = "0.3.0"
 
 [dependencies]
-almide-grammar = { git = "https://github.com/almide/almide-grammar" }
+almide_grammar = { git = "https://github.com/almide/almide-grammar" }

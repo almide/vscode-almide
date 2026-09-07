@@ -1,0 +1,3 @@
+# almide.lock — auto-generated, do not edit
+
+almide_grammar = { git = "https://github.com/almide/almide-grammar", ref = "main", commit = "123530693e4bc6a13788c7af1468a42c8338e2b7" }
