@@ -14,6 +14,7 @@ pub fn top_patterns() -> List[Pat] = [
   Include("#keyword"),
   Include("#type"),
   Include("#function-def"),
+  Include("#pattern"),
   Include("#constant"),
   Include("#operator"),
   Include("#identifier")
@@ -127,6 +128,32 @@ fn function_def() -> SingleEntry = {
   }
 }
 
+// Pattern-position syntax (almide 0.62.0): must precede #operator (so `..` in a
+// list/record pattern is rest, not range) and #identifier (so the as-binder is
+// captured as a binder, not a plain variable).
+fn pattern() -> RepoEntry = {
+  name: "pattern",
+  patterns: [
+    // as-pattern: `c @ Circle(r)`, `all @ [a, ..t]`, `whole @ some(v)` — an
+    // identifier followed by `@` is the binder; `@name` with nothing before it
+    // stays an annotation (#keyword).
+    MatchCap {
+      scope: "meta.pattern.as.almide",
+      regex: "\\b([a-z_][a-zA-Z0-9_]*)\\s*(@)(?=\\s*[A-Za-z_\\[(\"0-9])",
+      captures: [("1", "variable.other.almide"), ("2", "keyword.operator.as-pattern.almide")]
+    },
+    // rest: `[h, ..t]`, `[a, b, ..]`, `[..all]`, `{ x, .. }` — `..` directly after
+    // `[`/`{`/`,` and directly before `]`/`}`/`,` (optionally naming the tail).
+    // The range operator (`0..<n`, `a...b`) is never delimiter-adjacent, so it
+    // still falls through to #operator.
+    MatchCap {
+      scope: "meta.pattern.rest.almide",
+      regex: "(?<=[\\[{,])(\\s*)(\\.\\.)([a-z_][a-zA-Z0-9_]*)?(?=\\s*[\\]},])",
+      captures: [("2", "keyword.operator.rest.almide"), ("3", "variable.other.almide")]
+    }
+  ]
+}
+
 fn operator() -> RepoEntry = {
   name: "operator",
   patterns: [
@@ -166,6 +193,7 @@ pub fn repo_entries() -> List[RepoEntry] = [
   keyword(),
   constant(),
   type_patterns(),
+  pattern(),
   operator(),
   identifier()
 ]
