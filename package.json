@@ -2,7 +2,7 @@
   "name": "almide-lang",
   "displayName": "Almide",
   "description": "Syntax highlighting for the Almide programming language (.almd)",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "publisher": "almide",
   "repository": {
     "type": "git",
