@@ -172,9 +172,9 @@ fn identifier() -> RepoEntry = {
   name: "identifier",
   patterns: [
     Match { scope: "support.function.builtin.almide",
-      regex: "\\b(println|eprintln|assert_eq|assert_ne|assert|unwrap_or)\\b" },
+      regex: "\\b(println|eprintln|assert_eq|assert_ne|assert)\\b" },
     Match { scope: "support.module.almide",
-      regex: "\\b(string|list|map|set|int|float|math|datetime|error|value|bytes|matrix|option|result|prim|fs|env|process|io|json|random|regex|testing|log|path|args|http|net|zlib|base64|hex|html|mem)\\b(?=\\.)" },
+      regex: "\\b(string|list|map|set|int|float|bool|math|datetime|error|value|bytes|matrix|option|result|prim|fs|env|process|io|json|random|regex|testing|path|args|http|net|zlib|base64|hex|html|hash|secret|bigint|url|uuid|unix|deque|heap)\\b(?=\\.)" },
     Match { scope: "variable.language.almide",
       regex: "\\b(self|_)\\b" },
     Match { scope: "entity.name.function.predicate.almide",
