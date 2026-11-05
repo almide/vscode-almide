@@ -6,14 +6,11 @@ import tmrule
 import almide_textmate
 
 fn main() -> Unit = {
-  let top = string.join(
-    list.map(almide_textmate.top_patterns(), (p) => "    ${tmrule.emit_pat(p)}"),
-    ",\n"
-  )
+  let top = list.join(list.map(almide_textmate.top_patterns(), (p) => "    ${tmrule.emit_pat(p)}"), ",\n")
 
   let repo_parts = list.map(almide_textmate.repo_entries(), (e) => tmrule.emit_repo_entry(e))
   let single_parts = list.map(almide_textmate.single_entries(), (e) => tmrule.emit_single_entry(e))
-  let all_repo = string.join(repo_parts + single_parts, ",\n")
+  let all_repo = list.join(repo_parts + single_parts, ",\n")
 
   let output = """
 {

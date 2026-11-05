@@ -22,11 +22,11 @@ fn json_obj(pairs: List[(String, String)]) -> String = {
     let (k, v) = p
     "${q(k)}: ${v}"
   })
-  "{ ${string.join(entries, ", ")} }"
+  "{ ${list.join(entries, ", ")} }"
 }
 
 fn json_arr_inline(items: List[String]) -> String =
-  "[${string.join(items, ", ")}]"
+  "[${list.join(items, ", ")}]"
 
 // Emit a pattern to JSON
 
@@ -39,7 +39,7 @@ fn emit_pat(pat: Pat) -> String = match pat {
       let (group, cap_scope) = c
       "${q(group)}: ${json_obj([("name", q(cap_scope))])}"
     })
-    let caps = "{ ${string.join(cap_entries, ", ")} }"
+    let caps = "{ ${list.join(cap_entries, ", ")} }"
     json_obj([("name", q(scope)), ("match", q(regex)), ("captures", caps)])
   }
 
@@ -73,10 +73,7 @@ fn emit_pat(pat: Pat) -> String = match pat {
 type RepoEntry = { name: String, patterns: List[Pat] }
 
 fn emit_repo_entry(entry: RepoEntry) -> String = {
-  let pats = string.join(
-    list.map(entry.patterns, (p) => "        ${emit_pat(p)}"),
-    ",\n"
-  )
+  let pats = list.join(list.map(entry.patterns, (p) => "        ${emit_pat(p)}"), ",\n")
   """    "${entry.name}": {
       "patterns": [
 ${pats}
