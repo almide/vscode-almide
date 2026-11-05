@@ -85,7 +85,7 @@ fn keyword() -> RepoEntry = {
   // Keywords from almide-grammar (single source of truth)
   var patterns: List[Pat] = []
   for group in almide_grammar.keyword_groups() {
-    let regex = "\\b(" + string.join(group.words, "|") + ")\\b"
+    let regex = "\\b(" + list.join(group.words, "|") + ")\\b"
     patterns = patterns + [Match { scope: group.scope, regex: regex }]
   }
   // Annotation (not in almide-grammar — editor-specific)
@@ -96,7 +96,7 @@ fn keyword() -> RepoEntry = {
 fn constant() -> RepoEntry = {
   // Aliases (Ok, Err, Some, None) from almide-grammar
   let alias_names = list.map(almide_grammar.keyword_aliases(), (p) => p.0)
-  let alias_regex = "\\b(" + string.join(alias_names, "|") + ")\\b"
+  let alias_regex = "\\b(" + list.join(alias_names, "|") + ")\\b"
   {
     name: "constant",
     patterns: [
